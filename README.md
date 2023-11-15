@@ -2,5 +2,5 @@
 
 * Very cool repository :O
 * Cool buletin point :OO
-* THID BULLETIN POINT :OOOOOOOOOOOOOOOOOOOOOOO
+* THIRD BULLETIN POINT :OOOOOOOOOOOOOOOOOOOOOOO
 * Fourth bulletin
