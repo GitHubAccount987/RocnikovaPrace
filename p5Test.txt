@@ -1,0 +1,64 @@
+let myArray = [];
+
+function setup() {
+  
+  createCanvas(windowWidth, windowHeight);
+
+  background(255);
+  
+}
+
+function mousePressed() {
+  
+  strokeWeight(5);
+  
+  myArray.push(createVector(mouseX, mouseY));
+  
+  point(mouseX, mouseY);
+  
+  strokeWeight(1);
+  
+}
+
+function clearArray() { myArray.length = 0; }
+
+function keyPressed() {
+  
+  if (keyCode == 67) {
+   
+    clearArray();
+    
+    setup();
+    
+    return;
+  }
+  
+  if (keyCode == 68) {
+    
+    noFill();
+    beginShape();
+    
+    myArray.forEach((value) => {
+      
+      vertex(value.x, value.y);
+      
+    })
+    
+    endShape(CLOSE);
+    
+    clearArray();
+    
+    return;
+  }
+  
+  if (keyCode == 83) {
+    
+    let fileName = prompt("File name");
+    
+    if (!fileName) return;
+    
+    saveCanvas(`${fileName}.jpg`);
+    
+    return;
+  }
+}
