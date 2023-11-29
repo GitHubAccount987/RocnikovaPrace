@@ -1,20 +1,63 @@
 let myArray = [];
 
+let objectInedx = -1;
+
 function setup() {
   
   createCanvas(windowWidth, windowHeight);
 
   background(255);
   
+  strokeWeight(5);
+  
+}
+
+function draw() {
+  
+  /*if (objectIndex => 0) {
+    
+    let pointObject = myArray[objectIndex];
+    
+  }*/
+}
+
+function mouseReleased() {
+  
+  console.log("Mouse released")
+  
+  objectIndex = -1;
+  
 }
 
 function mousePressed() {
+
+  {
   
-  strokeWeight(5);
+    let value;
+    
+    for (let i = 0; i < myArray.length; i++) {
+
+      value = myArray[i];
+      
+      if (value.position.dist(createVector(mouseX, mouseY)) < 5) {
+
+        console.log("X: " + value.position.x + ", Y: " + value.position.y);
+
+        objectIndex = i;
+        
+        return;
+      }
+    }
+  }
   
-  myArray.push(createVector(mouseX, mouseY));
+  console.log("Point create");
   
-  point(mouseX, mouseY);
+  myArray.push({
+    
+    render: point(mouseX, mouseY),
+    position: createVector(mouseX, mouseY)
+    
+  })
   
   strokeWeight(1);
   
@@ -23,6 +66,8 @@ function mousePressed() {
 function clearArray() { myArray.length = 0; }
 
 function keyPressed() {
+  
+  // C => Clear canvas
   
   if (keyCode == 67) {
    
@@ -33,6 +78,8 @@ function keyPressed() {
     return;
   }
   
+  // D => Draw shape
+  
   if (keyCode == 68) {
     
     noFill();
@@ -40,7 +87,7 @@ function keyPressed() {
     
     myArray.forEach((value) => {
       
-      vertex(value.x, value.y);
+      vertex(value.position.x, value.position.y);
       
     })
     
@@ -50,6 +97,8 @@ function keyPressed() {
     
     return;
   }
+  
+  // S => Save
   
   if (keyCode == 83) {
     
