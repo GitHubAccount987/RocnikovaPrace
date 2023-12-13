@@ -1,3 +1,6 @@
-# TestRepository
+# Test Repository
 
-very cool repositroy
+* Very cool repository :O
+* Cool buletin point :OO
+* THIRD BULLETIN POINT :OOOOOOOOOOOOOOOOOOOOOOO
+* Fourth bulletin
