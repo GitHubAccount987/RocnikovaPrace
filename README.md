@@ -1,3 +1,3 @@
 # Závěrečná práce
-
-[Projekt je zde](https://githubaccount987.github.io/ZaverecnaPrace/DelaunayTriangulation)
+<!-- needs github pages the repository has to be public to do that will add later -->
+[Projekt je zde]()
