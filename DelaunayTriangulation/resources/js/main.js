@@ -54,8 +54,9 @@ class Triangle {
 
 		// scalar = 1/(m_x_1*-m_y_2 + m_x_2*m_y_1)*(b_x_1 - b_x_2)
 		// m1 = edgeA, m2 = edgeB, b1 = middleA, b2 = middleB
+		// 1 / (edgeA.x * edgeB.y - edgeB.x * edgeA.y) * (middleA.x * edgeB.y - middleB.x * edgeA.y);
 
-		let scalar = 1 / (edgeA.x * edgeB.y - edgeB.x * edgeA.y) * (middleA.x * edgeB.y - middleB.x * edgeA.y);
+		let scalar = ;
 
 		console.log(`scalar: ${scalar}`);
 
