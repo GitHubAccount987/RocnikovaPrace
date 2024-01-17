@@ -1,3 +1,3 @@
 # Závěrečná práce
 
-[Projekt je zde](https://githubaccount987.github.io/ZaverecnaPrace/)
+[Projekt je zde](https://githubaccount987.github.io/ZaverecnaPrace/DelaunayTriangulation)
