@@ -19,56 +19,46 @@ class Triangle {
 		this.points = points;
 		this.triangleColor = triangleColor;
 
-	}
+		// CIRCUMCENTER
 
-	get circumcenter() {
-
-		console.log("=== CIRCUMCENTER ===");
-
-		// Copying the point thus making a new vector object independent of the original one
-		// in other words any operation done on this copy won't have any effect on the original.
-		// So I take that copy subtract from it the next point and get the edge.
+		// btw I am using the p5.Vector due to preformance reasons since I believe it's better
+		// to use a function (that for example adds 2 vectors together) that takes it's arguments
+		// by reference and does some operation on them and returns the final vector
+		// Rather than to make a copy of some vector (so copy the ENTIRE vector) and the do the operation
+		// on it
 
 		// edgeA = Vertex A → Vertex B, edgeB = Vertex B → Vertex C
 
-		let edgeA = this.points[1].copy().sub(this.points[0]), edgeB = this.points[2].copy().sub(this.points[1]);
-
-		console.log(`edgeA: (${edgeA.x}, ${edgeA.y})`);
-		console.log(`edgeB: (${edgeB.x}, ${edgeB.y})`);
+		let edgeA = p5.Vector.sub(this.points[1], this.points[0]), edgeB = p5.Vector.sub(this.points[2], this.points[1]);
 
 		// Finding the center of each edge
 
-		let middleA = this.points[1].copy().add(this.points[0]).div(2), middleB = this.points[2].copy().add(this.points[1]).div(2);
-
-		console.log(`middleA: (${middleA.x}, ${middleA.y})`);
-		console.log(`middleB: (${middleB.x}, ${middleB.y})`);
+		let middleA = p5.Vector.add(this.points[0], this.points[1]).div(2), middleB = p5.Vector.add(this.points[1], this.points[2]).div(2);
 
 		// Creating a normal vector to edgeA and edgeB and writing it to them
 		// Rotate by 90° = (-y, x)
 
 		edgeA = createVector(-edgeA.y, edgeA.x);
-		edgeB = createVector(-edgeB.y, edgeB.x);		
-
-		console.log(`normA: (${edgeA.x}, ${edgeA.y})`);
-		console.log(`normB: (${edgeB.x}, ${edgeB.y})`);
-
-		// u = edgeA
-		// v = edgeB
-
-		// A = middleA
-		// B = middleB
+		edgeB = createVector(-edgeB.y, edgeB.x);
 
 		let scalar = (edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x))/(edgeB.x*edgeA.y - edgeB.y*edgeA.x);
 
-		console.log(`scalar: ${scalar}`);
-
 		// and finally the point of interesection aka the circumcenter
-		// the equation below is describing the line made by A
+		// the equation below is describing the line made by edgeA (the perpendicular version)
 
-		return edgeA.mult(scalar).add(middleA);
+		this.circumcenter = edgeA.mult(scalar).add(middleA);
+
+		// The radius is squared due to optimatization reasons
+
+		this.circumradiusSq = p5.Vector.sub(this.points[0], this.circumcenter).magSq();
+
 	}
 
 	subDivide() {
+
+		// This function will "sub divide" the triangle
+		// aka it will turn the triangle into 3 smaller ones
+		// that make up the original one
 
 		
 
@@ -92,10 +82,6 @@ TODO:
 */
 
 function setup() {
-
-	let tstTriangle = new Triangle([createVector(-1, 0), createVector(0, 1), createVector(2, -1)], color(0, 0, 0));
-
-	console.log(tstTriangle.circumcenter.toString());
 
 	// The canvas is in a variable since I would like the mouseClicked event to be only fired when the user clicks on the canvas
 	// If I would only use the mouseClicked function alone then the event would be fired every time the user clicks
@@ -236,7 +222,7 @@ function draw() {
 	}
 }
 
-// Event functions \\
+// Button functions \\
 
 function triangulationHandler() {
 
@@ -245,7 +231,7 @@ function triangulationHandler() {
 	// Loop through all of the points and find if any are laying on top of each other
 	// The reason why this check is here and is not being done every time the user places a point
 	// is because of preformance reasons.
-	// In my opinion it's better to just do the points check when the user wants to do the triangulation
+	// In my opinion it's better to just do the points overlap check when the user wants to do the triangulation
 	// Rather than going through the entire "points" array and check if some of the points are overlapping
 	// every time the user places a point
 
@@ -284,6 +270,8 @@ function triangulationHandler() {
 
 	points.sort((a, b) => { return a.position.x - b.position.x; });
 
+	// Initialize the incomplete triangles array with the "Super triangle"
+
 	let incompleteTriangles = [
 
 		new Triangle(
@@ -300,6 +288,8 @@ function triangulationHandler() {
 
 		)
 	];
+
+	
 
 }
 
