@@ -52,11 +52,13 @@ class Triangle {
 		console.log(`normA: (${edgeA.x}, ${edgeA.y})`);
 		console.log(`normB: (${edgeB.x}, ${edgeB.y})`);
 
-		// scalar = 1/(m_x_1*-m_y_2 + m_x_2*m_y_1)*(b_x_1 - b_x_2)
-		// m1 = edgeA, m2 = edgeB, b1 = middleA, b2 = middleB
-		// 1 / (edgeA.x * edgeB.y - edgeB.x * edgeA.y) * (middleA.x * edgeB.y - middleB.x * edgeA.y);
+		// u = edgeA
+		// v = edgeB
 
-		let scalar = ;
+		// A = middleA
+		// B = middleB
+
+		let scalar = (edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x))/(edgeB.x*edgeA.y - edgeB.y*edgeA.x);
 
 		console.log(`scalar: ${scalar}`);
 
