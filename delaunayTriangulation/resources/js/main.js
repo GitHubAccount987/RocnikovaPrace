@@ -54,6 +54,20 @@ class Triangle {
 
 	}
 
+	get edges() {
+
+		// The edges are recorded in the following order
+		// VertexA → VertexB, VertexB → VertexC, VertexA → VertexC
+
+		return [
+
+			[this.points[0], this.points[1]],
+			[this.points[1], this.points[2]],
+			[this.points[0], this.points[2]]
+
+		];
+	}
+
 	subDivide() {
 
 		// This function will "sub divide" the triangle
@@ -289,8 +303,51 @@ function triangulationHandler() {
 		)
 	];
 
-	
+	let edges[], flaggedTriangles[];
 
+	let currentPoint, currentTriangle, edgesToDelete;
+
+	// edgesToDelete, even though it's not mentioned in the
+	// paper I've found out that the amount of triangles
+	// that interesect a point corresponds to the amount
+	// of duplicate edges that will have to be deleted 
+	// minus 1
+
+	// For each point we would loop through the incomplete
+	// triangles array and do the necessary operations
+
+	for (int i = 0; i < points.length; i++) {
+
+		currentPoint = points[i].position;
+
+		for (int j = 0; j < incompleteTriangles; j++) {
+
+			currentTriangle = incompleteTriangles[j];
+
+			// D^2 > R^2 basically if the distance from the circumcenter
+			// of the current triangle to the current point is greater than
+			// the radius of the circumcircle than this point doesn't interesect
+			// the circumcircle of the current triangle
+			// Thus this triangle's circumcircle cannot intersect any other
+			// point and won't be sub divided
+
+			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq > currentTriangle.circumradiusSq) continue;
+
+			flaggedTriangles.push(currentTriangle);
+
+		}
+
+		// Now the flagged triangles will be subdivided
+		// Once completed the new set of triangles will be
+		// used to replace the old incompelteTriangles
+
+		// Now why is it dones this way? Why don't I simply
+		// delete and subdivide the triangle once I find out
+		// that it intersects a point
+		// Simple if I did the length of the array would change
+		// and the for loop would be skipping some triangles
+
+	}
 }
 
 function saveHandler() {
