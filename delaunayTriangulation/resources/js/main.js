@@ -136,7 +136,7 @@ function setup() {
 			let currentPoint;
 			let currentSmallestDistance = Number.MAX_SAFE_INTEGER, currentDistance;
 
-			const minDistance = 50;
+			const minDistance = 25;
 
 			// Check for the nearest point that is both closest to the mouse
 			// and also the distance is smaller than minLength		
@@ -303,7 +303,7 @@ function triangulationHandler() {
 		)
 	];
 
-	let edges[], flaggedTriangles[];
+	let edges = [], flaggedTriangles = [];
 
 	let currentPoint, currentTriangle, edgesToDelete;
 
@@ -316,11 +316,11 @@ function triangulationHandler() {
 	// For each point we would loop through the incomplete
 	// triangles array and do the necessary operations
 
-	for (int i = 0; i < points.length; i++) {
+	for (let i = 0; i < points.length; i++) {
 
 		currentPoint = points[i].position;
 
-		for (int j = 0; j < incompleteTriangles; j++) {
+		for (let j = 0; j < incompleteTriangles; j++) {
 
 			currentTriangle = incompleteTriangles[j];
 
@@ -331,7 +331,7 @@ function triangulationHandler() {
 			// Thus this triangle's circumcircle cannot intersect any other
 			// point and won't be sub divided
 
-			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq > currentTriangle.circumradiusSq) continue;
+			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() > currentTriangle.circumradiusSq) continue;
 
 			flaggedTriangles.push(currentTriangle);
 
