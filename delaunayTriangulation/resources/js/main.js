@@ -10,7 +10,7 @@ let points = [];
 
 class Triangle {
 
-	constructor(points, triangleColor) {
+	constructor(points, triangleColor = color(0, 0, 0)) {
 
 		// Sort the points in an ascending order according to their x coordinate
 
@@ -67,17 +67,6 @@ class Triangle {
 
 		];
 	}
-
-	subDivide() {
-
-		// This function will "sub divide" the triangle
-		// aka it will turn the triangle into 3 smaller ones
-		// that make up the original one
-
-		
-
-	}
-
 }
 
 // Code \\
@@ -87,6 +76,7 @@ class Triangle {
 TODO:
 
 • Triangulate function
+• Create edge class?
 • Make it possible for the triangulation to be shown step by step
 • Make it possible for the points to be deleted
 • Add a more optimatizated version of the Nearest Neighboar Search
@@ -296,14 +286,11 @@ function triangulationHandler() {
 				createVector(mainCanvas.width/2, -10000),
 				createVector(10000, 10000)
 
-			],
-
-			color(0, 0, 0)
-
+			]
 		)
 	];
 
-	let edges = [], flaggedTriangles = [];
+	let completeTriangles = [], edges = [], flaggedTriangles = [];
 
 	let currentPoint, currentTriangle, edgesToDelete;
 
@@ -320,7 +307,7 @@ function triangulationHandler() {
 
 		currentPoint = points[i].position;
 
-		for (let j = 0; j < incompleteTriangles; j++) {
+		for (let j = 0; j < incompleteTriangles.length; j++) {
 
 			currentTriangle = incompleteTriangles[j];
 
@@ -331,21 +318,76 @@ function triangulationHandler() {
 			// Thus this triangle's circumcircle cannot intersect any other
 			// point and won't be sub divided
 
-			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() > currentTriangle.circumradiusSq) continue;
+			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() > currentTriangle.circumradiusSq) { completeTriangles.push(currentTriangle); continue; }
+
+			edgesToDelete++;
 
 			flaggedTriangles.push(currentTriangle);
 
+			// The ... are used to "unpack" the array
+			// that the get edges function returns
+
+			edges.push(...currentTriangle.edges);
+
 		}
 
-		// Now the flagged triangles will be subdivided
-		// Once completed the new set of triangles will be
-		// used to replace the old incompelteTriangles
+		edgesToDelete--;
 
-		// Now why is it dones this way? Why don't I simply
-		// delete and subdivide the triangle once I find out
-		// that it intersects a point
-		// Simple if I did the length of the array would change
-		// and the for loop would be skipping some triangles
+		// Before we move onto the subdivide stage we first have
+		// to delete duplicate edges
+		// The edgesToDelete variable tells us how many duplicate
+		// edges there are present
+
+		// If edgesToDelete == 0 that means that there is only
+		// one triangle that we have to subdivide one triangle
+		// means that there are no duplicate edges
+		// Thus we can skip this step and head straight to the
+		// subdivision step
+
+		if (edgesToDelete != 0) {
+
+			// Somehow implement this deletedDuplicates variables
+
+			let deletedDuplicates = 0;
+
+			for (let i = 0; i < edges.length - 1; i++) {
+
+				for (let j = i + 1; j < edge.length; j++) {
+
+					// Now you may be wondering why don't we check the
+					// entire edges array in othe words why j = i + 1?
+					// and not j = 0? well since we only have to check
+					// the edges from i + 1 and forward, why?
+					// Since well why would we check the preeceding edges?
+					// We already check if those have any duplicates in the array
+					// and if the deges are still there than that means that they
+					// have no duplicate in the array
+
+					// bro this is terrible do an edge class
+
+					if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
+
+					// You can't do this you have to offset the i and j values too 
+					// or else all of the indexes will be shifted
+
+					edges.splice(i, 1);
+					edges.splice(j - 1, 1);
+
+					deletedDuplicates++;
+
+				}
+			}
+		}
+
+		// Now that we looped through every incomplete triangle
+		// and every single duplicate edge has been deleted
+		// the flagged triangles will be now be subdivided
+		// Once completed the new set of triangles will be
+		// used to replace the old incompelteTriangles array
+		// We will repeate these steps until the set of points
+		// to be triangulated is exhausted
+
+		
 
 	}
 }
