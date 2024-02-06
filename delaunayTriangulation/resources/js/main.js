@@ -6,6 +6,22 @@ let closestPoint;
 
 let points = [];
 
+/*
+
+[a, b, c, d, e, f] 15
+[a, b, c, d, e]    10
+[a, b, c, d]       6
+[a, b, c]          3
+[a, b]             1
+
+(6, 15)
+(5, 10)
+(4, 6)
+(3, 3)
+(2, 1)
+
+*/
+
 // Classes \\
 
 class Triangle {
@@ -367,8 +383,8 @@ function triangulationHandler() {
 
 					if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
 
-					// You can't do this you have to offset the i and j values too 
-					// or else all of the indexes will be shifted
+					i--;
+					j--;
 
 					edges.splice(i, 1);
 					edges.splice(j - 1, 1);
