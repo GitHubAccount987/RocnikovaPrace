@@ -8,17 +8,59 @@ let points = [];
 
 /*
 
-[a, b, c, d, e, f] 15
-[a, b, c, d, e]    10
-[a, b, c, d]       6
-[a, b, c]          3
-[a, b]             1
+s - size of the array
 
+y = s/f(x) - gives j
+
+i = j
+
+7 - 1 = 0, 7 = 1, 12 = 2, 16 = 3, 19 = 4
+6 - 
+5 - 
+4 - 
+3 - 
+2 - 
+
+[a, b, c, d, e, f, g] 21
+[a, b, c, d, e, f]    15
+[a, b, c, d, e]       10
+[a, b, c, d]          6
+[a, b, c]             3
+[a, b]                1
+
+(7, 21)
 (6, 15)
 (5, 10)
 (4, 6)
 (3, 3)
 (2, 1)
+
+f(x) = 1/2*x^2 - 1/2*x - tells us how many times will the array be accesed
+
+visual representation of how the comparasion process works
+the elements in brackets are the elements which are
+being compared. i is the leftmost bracket j is the
+rightmost bracket.
+
+
+f(5) = 1/2*5^2 - 1/2*5 = 10 - the array will be accesed 10 times
+
+[(a), (b), c, d, e] 1  - i = 0, j = 1
+[(a), b, (c), d, e] 2  - i = 0, j = 2
+[(a), b, c, (d), e] 3  - i = 0, j = 3
+[(a), b, c, d, (e)] 4  - i = 0, j = 4
+[a, (b), (c), d, e] 5  - i = 1, j = 2
+[a, (b), c, (d), e] 6  - i = 1, j = 3
+[a, (b), c, d, (e)] 7  - i = 1, j = 4
+[a, b, (c), (d), e] 8  - i = 2, j = 3
+[a, b, (c), d, (e)] 9  - i = 2, j = 4
+[a, b, c, (d), (e)] 10 - i = 3, j = 4
+
+f(3) = 1/2*3^2 - 1/2*3 = 3 - the array will be accesed 3 times
+
+[(a), (b), c] - i = 0, j = 1
+[(a), b, (c)] - i = 0, j = 2
+[a, (b), (c)] - i = 1, j = 2
 
 */
 
@@ -376,18 +418,18 @@ function triangulationHandler() {
 					// the edges from i + 1 and forward, why?
 					// Since well why would we check the preeceding edges?
 					// We already check if those have any duplicates in the array
-					// and if the deges are still there than that means that they
+					// and if the edges are still there than that means that they
 					// have no duplicate in the array
 
 					// bro this is terrible do an edge class
 
 					if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
 
-					i--;
-					j--;
-
 					edges.splice(i, 1);
 					edges.splice(j - 1, 1);
+
+					i--;
+					j--;
 
 					deletedDuplicates++;
 
