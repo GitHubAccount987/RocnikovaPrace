@@ -1,0 +1,170 @@
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+/*
+
+It may seem a bit confusing what's happening in here however let me explain.
+Let's look at the following sequence on numbers.
+
+btw u gotta understand how modulo works
+
+[(a), (b), c] - i = 0, j = 1
+[(a), b, (c)] - i = 0, j = 2
+
+[a, (b), (c)] - i = 1, j = 2
+
+-----
+
+[(a), (b), c, d, e] 1  - i = 0, j = 1 | 1
+[(a), b, (c), d, e] 2  - i = 0, j = 2 | 2
+[(a), b, c, (d), e] 3  - i = 0, j = 3 | 3
+[(a), b, c, d, (e)] 4  - i = 0, j = 4 | 4
+
+[a, (b), (c), d, e] 5  - i = 1, j = 2 | 1
+[a, (b), c, (d), e] 6  - i = 1, j = 3 | 2
+[a, (b), c, d, (e)] 7  - i = 1, j = 4 | 3
+
+[a, b, (c), (d), e] 8  - i = 2, j = 3 | 1
+[a, b, (c), d, (e)] 9  - i = 2, j = 4 | 2
+
+[a, b, c, (d), (e)] 10 - i = 3, j = 4 | 1
+
+↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+We will be talking about this sequance
+
+We can see the following. In the first itteration j starts at 1 and incerements until the last index.
+When j reaches the last index of the array i increments by 1.
+When i = 1 j is offseted by 1 from the value it would normally have i.e. j would normally have value of 1
+however since it's offseted by i it's value in reality is 2. Same with i = 2 j in this case j is offseted by
+2. This is because j is always starting from i + 1 we can see that in the first itteration. i starts at the index
+0 but j is always starts one index ahead so its not 0 but 1. we can think of i as a point of reference for j.
+Btw let's look at this simple equation i + 1 why does it look like this? As I said before i serves as a point
+of reference for j so j looks at where i starts. What j then does is that it goes 1 index ahead of i hence the
++ 1.
+We can also see that j repeats the same set of values in this case it's 1, 2, 3 and 4 (the values to the right of | btw)
+we will call these the base values. The values to the left of | are the base values offseted by i.
+
+Now we have enough information to start working on an equation to describe i and j. We will use j to derive i since we know
+much more about j then we do about i.
+As I said before we can see that j repeats the same base values in the latter sequence 1 - 4, in the first
+squence 1 - 2. This hints at the use of a modulo in other words we need to somehow achieve a behaviour
+where j start at 1 and ends at the last index. So something like this will do j%(size - 1).
+
+
+However this isn't sufficient we can observer that as i increase the base values that are repated are smaller
+and smaller. Such as when i = 1 j goes from 1 to 3 when i = 2 j goes from 1 to 2 in other words the sequences
+of the base numbers is decreased by i so when i = 0 we repeat 4 base values (1, 2, 3, 4) when i = 1 we 
+repeat 4 - 1 = 3 base values (1, 2, 3) when i = 2 we repeat 4 - 2 = 2 base values (1, 2).
+So how can we achieve this well we have to somehow somewhere implement our i in the previous equation.
+We already saw how i affects the numbers that are repeated so how about this j%(size - 1 - i). With this
+as i increase the values repeat more and more frequently.
+
+Great so that's j how about i. We have observed that whenever j (not it's base value but it's actual value)
+reaches the last index of the array i increase by 1. Well this should be pretty simple whenever j reaches
+that index we will add 1 to i. So maybe something like floor(j/(size - 1)) should work pretty well. size - 1
+finds the last possible index of the array and j is then divided by this to give us a number if that number
+is below 0 floor rounds it to 0 if it's 1 then floor will return number 1 that is then added to i thus increasing
+it by 1.
+
+so let's implment it.
+
+for (let k = 0; k < loops; k++) {
+
+	j++;
+
+	i += Math.floor(j/(size - 1));
+	j = j%(size - 1 - i);
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+And let's run it with an array that's the size of 5.
+
+if you will run that you will find out that ummmmm. it doesn't work D:
+but what's wrong? Well let's look at the sequence and try to fix the problem.
+i: 0, j: 1
+i: 0, j: 2
+i: 0, j: 3
+i: 1, j: 1
+well something went clearly wrong where did i: 0, j: 4 go?
+To find out let's take a look at the moment when j reaches 4 what happens?
+
+i = 0
+j = 4
+
+i += Math.floor(j/(size - 1))
+j = j%(size - 1 - i)
+
+----
+
+i += Math.floor(4/(5 - 1)) = 1
+i += 1
+i = 1
+
+j = 4%(5 - 1 - 1) = 4%3 = 1
+
+okay so we found out about 2 things our equations are wrong.
+
+Also bare in mind that in the loop we are aware how many times have we accesed the array if it's our
+1st, 2nd or 45th acces.
+
+*/
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+for (let k = 0; k < loops; k++) {
+
+	j++;
+
+	i += Math.floor(j/(size - 1));
+	j = j%(size - 1 - i);
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+// the wroking version
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+for (let k = 0; k < loops; k++) {
+
+	j++;
+
+	i += Math.floor(j/(size - 1));
+	j = j%(size - i);
+
+	console.log(`i: ${i}, j: ${j + i}`);
+
+}
+
+// another veriosn
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+for (let k = 0; k < loops; k++) {
+
+	j += i;
+
+	i += Math.floor((j + 1)/size);
+	j = j%(size - 1) + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
