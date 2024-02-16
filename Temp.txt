@@ -109,8 +109,7 @@ j = 4%(5 - 1 - 1) = 4%3 = 1
 
 okay so we found out about 2 things our equations are wrong.
 
-Also bare in mind that in the loop we are aware how many times have we accesed the array if it's our
-1st, 2nd or 45th acces.
+
 
 */
 
@@ -163,6 +162,74 @@ for (let k = 0; k < loops; k++) {
 	j += i;
 
 	i += Math.floor((j + 1)/size);
+	j = j%(size - 1) + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+// attempt
+
+/*
+
+[(a), (b), c, d, e] 1  - i = 0, j = 1 | 1
+[(a), b, (c), d, e] 2  - i = 0, j = 2 | 2
+[(a), b, c, (d), e] 3  - i = 0, j = 3 | 3
+[(a), b, c, d, (e)] 4  - i = 0, j = 4 | 4
+
+[a, (b), (c), d, e] 5  - i = 1, j = 2 | 1
+[a, (b), c, (d), e] 6  - i = 1, j = 3 | 2
+[a, (b), c, d, (e)] 7  - i = 1, j = 4 | 3
+
+[a, b, (c), (d), e] 8  - i = 2, j = 3 | 1
+[a, b, (c), d, (e)] 9  - i = 2, j = 4 | 2
+
+[a, b, c, (d), (e)] 10 - i = 3, j = 4 | 1
+
+*/
+
+/*
+
+j = j%(size - 1) + 1;
+
+the + 1 at the end has 2 functions. It increments j but also offsets the result
+instead of something like 0, 1, 2, 3, 4 we get 1, 2, 3, 4, 5 thanks to the
++ 1.
+size - 1 this makes sure that the range of values being returned is correct.
+If it wasn't there we would be returning 5 values we only want to return 4.
+So if the - 1 wasn't there we would be returning 1, 2, 3, 4, 5 but thanks
+to the - 1 we only return 4 values 1, 2, 3, 4. You can play around with it
+to discover these things yourself.
+
+here is the code you can play with.
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+for (let k = 0; k < loops; k++) {
+
+	j = j%(size - 1) + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+*/
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+let floor = Math.floor;
+
+for (let k = 0; k < loops; k++) {
+
+	i += floor(j/(size - 1));
 	j = j%(size - 1) + 1;
 
 	console.log(`i: ${i}, j: ${j}`);
