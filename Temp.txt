@@ -130,7 +130,7 @@ for (let k = 0; k < loops; k++) {
 
 }
 
-// the wroking version
+// the wroking version lies doesn't work >:(
 
 let size = 5;
 
@@ -149,7 +149,7 @@ for (let k = 0; k < loops; k++) {
 
 }
 
-// another veriosn
+// another veriosn doesn't work either
 
 let size = 5;
 
@@ -168,7 +168,7 @@ for (let k = 0; k < loops; k++) {
 
 }
 
-// attempt
+// attempt this one actually works but i dont like it
 
 /*
 
@@ -217,7 +217,7 @@ for (let k = 0; k < loops; k++) {
 
 }
 
-*/
+---------
 
 let size = 5;
 
@@ -233,5 +233,60 @@ for (let k = 0; k < loops; k++) {
 	j = j%(size - 1) + 1;
 
 	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+Again you can play with that code above but let's explain this equation floor(j/(size - 1)).
+In other words when j reaches the last index of the array (4 in this case) we want this equation
+to be equal to one and that one is then added to i. The floor is there to return only whole numbers. 
+If it wasn't there we would be returning something like 0.25, 0.5, 0.75 etc. we don't want deicmal
+values we only want whole numbers and the floor function does just that. Why size - 1? this tells
+us the last index. Last index always equals to the size of the array - 1.
+Also the way that the code is ordered is also important. The calculation of i (with i I am actually refering
+to this equation floor(j/(size - 1))) has to come BEFORE we try to calculate j. This is because
+in the same iteration where j == 4 i would become 1 we dont want that we want i to still be 0
+for that iteration. So when we caluclate i j still carries the same value from the previous iteration
+for example 3 after we try to calucalte i we get 0 back and THEN j is incremented as I said before with the + 1.
+
+*/
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+let end = size - 1;
+
+let floor = Math.floor;
+
+for (let k = 0; k < loops; k++) {
+
+	console.log("// ######### DEBUG ######### \\\\");
+
+	console.log(`i: ${i}, j: ${j}`);
+
+	console.log("///////////////////////////");
+	console.log(`i += floor(${j}/${end})`);
+	console.log(`i += floor(${j/end})`);
+	console.log(`i += ${floor(j/end)}`);
+
+	i += floor(j/end);
+
+	console.log("///////////////////////////");
+	console.log(`j = ${j}%${end} + (floor(${j}/${end}) == 1 ? (${i} + 1) : 1)`);
+	console.log(`j = ${j}%${end} + (floor(${j/end}) == 1 ? (${i} + 1) : 1)`);
+	console.log(`j = ${j}%${end} + (${floor(j/end)} == 1 ? (${i} + 1) : 1)`);
+	console.log(`j = ${j}%${end} + (${floor(j/end) == 1} ? ${i + 1} : 1)`);
+	console.log(`j = ${j}%${end} + ${floor(j/end) == 1 ? (i + 1) : 1}`);
+	console.log(`j = ${j%end} + ${floor(j/end) == 1 ? (i + 1) : 1}`);
+	console.log(`j = ${j%end + floor(j/end) == 1 ? (i + 1) : 1}`);
+
+	console.log("\\\\ ######### DEBUG ######### //");
+
+	j = j%end + (floor(j/end) == 1 ? i : 0) + 1;
+
+	console.log(`STATUS: i: ${i}, j: ${j}`);
+	console.log("----------------------------------");
 
 }
