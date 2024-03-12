@@ -6,6 +6,8 @@ let closestPoint;
 
 let points = [];
 
+let triangles= [];
+
 /*
 
 s - size of the array
@@ -110,6 +112,23 @@ class Triangle {
 
 		this.circumradiusSq = p5.Vector.sub(this.points[0], this.circumcenter).magSq();
 
+	}
+
+	contains(elements) {
+
+		let currentElement;
+
+		for (let i = 0; i < elements.length; i++) {
+
+			currentElement = elements[i];
+
+			// ik what you are thinking but screw it idc
+
+			if (currentElement === this.points[0] || currentElement === this.points[1] || currentElement === this.points[2]) { return true; }
+
+		}
+
+		return false;
 	}
 
 	get edges() {
@@ -334,15 +353,17 @@ function triangulationHandler() {
 
 	// Initialize the incomplete triangles array with the "Super triangle"
 
+	let A = createVector(-10000, 10000), B = createVector(mainCanvas.width/2, -10000), C = createVector(10000, 10000);
+
 	let incompleteTriangles = [
 
 		new Triangle(
 
 			[
 
-				createVector(-10000, 10000),
-				createVector(mainCanvas.width/2, -10000),
-				createVector(10000, 10000)
+				A,
+				B,
+				C
 
 			]
 		)
@@ -362,6 +383,11 @@ function triangulationHandler() {
 	// triangles array and do the necessary operations
 
 	for (let i = 0; i < points.length; i++) {
+
+		edges.length = 0;
+		flaggedTriangles.length = 0;
+
+		edgesToDelete = 0;
 
 		currentPoint = points[i].position;
 
@@ -397,57 +423,173 @@ function triangulationHandler() {
 		// edges there are present
 
 		// If edgesToDelete == 0 that means that there is only
-		// one triangle that we have to subdivide one triangle
+		// one triangle that we have to subdivide, one triangle
 		// means that there are no duplicate edges
 		// Thus we can skip this step and head straight to the
 		// subdivision step
 
 		if (edgesToDelete != 0) {
 
-			// Somehow implement this deletedDuplicates variables
-
 			let deletedDuplicates = 0;
+			let size = edges.length;
 
-			for (let i = 0; i < edges.length - 1; i++) {
+			let loops = 1/2*size*size - 1/2*size;
+			let lastIndex = size - 1;
 
-				for (let j = i + 1; j < edge.length; j++) {
+			let floor = Math.floor;
 
-					// Now you may be wondering why don't we check the
-					// entire edges array in othe words why j = i + 1?
-					// and not j = 0? well since we only have to check
-					// the edges from i + 1 and forward, why?
-					// Since well why would we check the preeceding edges?
-					// We already check if those have any duplicates in the array
-					// and if the edges are still there than that means that they
-					// have no duplicate in the array
+			let flagged = [];
 
-					// bro this is terrible do an edge class
+			let i = 0, j = 0; // this might conflict with the enclosing loop's i
 
-					if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
+			for (let k = 0; k < loops; k++) {
 
-					edges.splice(i, 1);
-					edges.splice(j - 1, 1);
+				// If the amount of edges that have been deleted == to the amount
+				// of edges that we have to delete.
+				// That means that all of the duplicate edges have been deleted
+				// and we can break out of this loop and continue to the next step
 
-					i--;
-					j--;
+				if (deletedDuplicates == edgesToDelete) break;
 
-					deletedDuplicates++;
+				i += floor(j/lastIndex);
 
-				}
+				j = j%lastIndex + floor(j/lastIndex)*i + 1;
+
+				// bro this is terrible do an edge class
+
+				if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
+
+				flagged.push([i, j]);
+
+				deletedDuplicates++;
+
+			}
+
+			// All of the duplicate edges have been flagged
+			// now we just have to delete them. You may be
+			// wondering why do I flag them and not just
+			// delete them when I find them. This is because
+			// if I would delete them the entire array would
+			// shift thus the i and j calculations would
+			// no longer be valid since they would be offseted
+			// and none the stuff would no longer work.
+
+			// [(a), b, c, (a), e, f] i = 0, j = 3 - delete duplicates
+			// [(b), c, e, (f)]	  i = 0, j = 3 - j in this case has been shifted
+			//					 this lead to it skipping e and
+			//					 since the size changed i and j
+			//					 will go out of bounds later
+			//					 in the loop
+
+			// Whenever I delete something in the array the elements will be shifted
+			// by 1 to the left this k will help with correcting this issue.
+
+			for (let k = 0; k < flagged.length; k++) {
+
+				// The removal of the second edge has to come before
+				// the removal of the first edge. This is because if
+				// I would delete the first edge then the position
+				// of the second edge in the array would shift to
+				// the left. If I delete the second edge first
+				// the first edge stays at the same index.
+
+				//   0   1  2   3   4  5
+				// [(a), b, c, (a), e, f] - remove the second duplicate
+				//
+				//   0   1  2  3  4
+				// [(a), b, c, e, f] - see? e and f index changed however
+				//		       a, b and c index remains the same
+
+				edges.splice(flagged[k][1] - k, 0);
+				edges.splice(flagged[k][0] - k, 0);
+
 			}
 		}
 
-		// Now that we looped through every incomplete triangle
+		// Now that we have looped through every incomplete triangle
 		// and every single duplicate edge has been deleted
-		// the flagged triangles will be now be subdivided
-		// Once completed the new set of triangles will be
-		// used to replace the old incompelteTriangles array
+		// we will now create a new set of triangles out of
+		// these remaning edges
+		// Which will be placed into the incomplete triangles array
 		// We will repeate these steps until the set of points
 		// to be triangulated is exhausted
 
-		
+		let currentEdge;
+
+		incompleteTriangles.length = 0;
+
+		for (let j = 0; j < edges.length; j++) {
+
+			currentEdge = edges[i];
+
+			incompleteTriangles.push(new Triangle(
+
+				currentEdge[0],
+				currentEdge[1],
+				points[i]
+
+			));
+
+		}
+	}
+
+	// Now that we have looped through all of the points
+	// we now have to delete every triangle that shares
+	// one of it's vertices with the super triangle
+
+	// I start from the end and work my wait towards
+	// the begging to avoid the index shifitng issue
+	// if I would go from the front this would happen
+	//
+	// the elements in brackets are those to be deleted
+	//   0   1  2  3   4   5
+	// [(a), b, c, d, (e), f] - delete a
+	//
+	//  0  1  2   3   4
+	// [b, c, d, (e), f]	  - the whole array shifted
+	//			    b is no longer at index
+	//			    1 c no longer at 2 d no
+	//			    longer at 3 etc.
+	//			    to resolve such issue 
+	//			    we would need a variable
+	//			    that would tell us by how
+	//			    much the array is shifted
+	//
+	// Or we can do start from the end.
+	// Let's take into consideration our previous example.
+	//
+	//   0   1  2  3   4   5
+	// [(a), b, c, d, (e), f] - now instead of deleting a
+	//			    we will start from the end
+	//			    and delete e
+	//   0   1  2  3  4
+	// [(a), b, c, d, f]	  - and look at that only f
+	//			    has been shifted but we
+	//			    don't care about that
+	//			    why? Because we know that
+	//			    we don't want to delete f
+	//			    in other words we don't
+	//			    care about f. The only thing
+	//			    of interest to us is that
+	//			    the part of the array that
+	//			    is yet to be accesed by the
+	//			    program didn't shift so we can
+	//			    continue as normal and we don't
+	//			    need a variable to tell us the
+	//			    amount of shift present.
+
+	let toCompare = [A, B, C];
+
+	for (let i = completeTriangles.length - 1; i => 0; i--) {
+
+		if (!completeTriangles[i].contains(toCompare)) continue;
+
+		completeTriangles.splice(i, 0);
 
 	}
+
+	triangles = completeTriangles;
+
 }
 
 function saveHandler() {
@@ -468,6 +610,7 @@ function deleteHandler() {
 	console.log("Deleting...");
 
 	points.length = 0;
+	triangles.length = 0;
 
 	closestPoint = null;
 

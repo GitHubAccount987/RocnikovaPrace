@@ -239,7 +239,7 @@ for (let k = 0; k < loops; k++) {
 Again you can play with that code above but let's explain this equation floor(j/(size - 1)).
 In other words when j reaches the last index of the array (4 in this case) we want this equation
 to be equal to one and that one is then added to i. The floor is there to return only whole numbers. 
-If it wasn't there we would be returning something like 0.25, 0.5, 0.75 etc. we don't want deicmal
+If it wasn't there we would be returning something like 0.25, 0.5, 0.75 etc. we don't want decimal
 values we only want whole numbers and the floor function does just that. Why size - 1? this tells
 us the last index. Last index always equals to the size of the array - 1.
 Also the way that the code is ordered is also important. The calculation of i (with i I am actually refering
@@ -247,6 +247,93 @@ to this equation floor(j/(size - 1))) has to come BEFORE we try to calculate j. 
 in the same iteration where j == 4 i would become 1 we dont want that we want i to still be 0
 for that iteration. So when we caluclate i j still carries the same value from the previous iteration
 for example 3 after we try to calucalte i we get 0 back and THEN j is incremented as I said before with the + 1.
+
+---------
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+let lastIndex = size - 1;
+
+let floor = Math.floor;
+
+for (let k = 0; k < loops; k++) {
+
+	i += floor(j/lastIndex);
+
+	j = j%lastIndex + (floor(j/lastIndex) == 1 ? i : 0) + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+Now this getting a little bit interesting. So first let's go over what has changed size - 1 since we used it in both
+i and j I simply stored it in a variable called lastIndex. And now this thing (floor(j/lastIndex) == 1 ? i : 0) ono.
+It may look scary but it's not. If you will look at it this floor(j/lastIndex) is basically the calculation of i
+and we are saying whenver this equals to 1 (in other words when j reaches the last index) and j thus loops back
+we want to add i as the offset. Now you may be wondering why is this complicated well 1 smol brain 2 why won't
+I just do something like this j = j%lastIndex + i + 1? Good idea however if I did this I would be adding i
+every iteration and not when j loops back around. You can actually try it out and see how quickly how j
+will get out of control. Play with the code below and see how j starts going crazy.
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+let lastIndex = size - 1;
+
+let floor = Math.floor;
+
+for (let k = 0; k < loops; k++) {
+
+	i += floor(j/lastIndex);
+
+	j = j%lastIndex + i + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+However this code.
+
+for (let k = 0; k < loops; k++) {
+
+	i += floor(j/lastIndex);
+
+	j = j%lastIndex + (floor(j/lastIndex) == 1 ? i : 0) + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
+
+Can be simplified even further. As we can see (floor(j/lastIndex) == 1 ? i : 0) returns i only when floor(j/lastIndex) == 1.
+The ternary operator can be removed and instead replaced with this floor(j/lastIndex)*i this has the same effect.
+So in the end we end up with this.
+
+let size = 5;
+
+let loops = 1/2*size*size - 1/2*size;
+
+let i = 0, j = 0;
+
+let lastIndex = size - 1;
+
+let floor = Math.floor;
+
+for (let k = 0; k < loops; k++) {
+
+	i += floor(j/lastIndex);
+
+	j = j%lastIndex + floor(j/lastIndex)*i + 1;
+
+	console.log(`i: ${i}, j: ${j}`);
+
+}
 
 */
 
@@ -266,14 +353,14 @@ for (let k = 0; k < loops; k++) {
 
 	console.log(`i: ${i}, j: ${j}`);
 
-	console.log("///////////////////////////");
+	console.log("/////////////////////////////////");
 	console.log(`i += floor(${j}/${end})`);
 	console.log(`i += floor(${j/end})`);
 	console.log(`i += ${floor(j/end)}`);
 
 	i += floor(j/end);
 
-	console.log("///////////////////////////");
+	console.log("/////////////////////////////////");
 	console.log(`j = ${j}%${end} + (floor(${j}/${end}) == 1 ? (${i} + 1) : 1)`);
 	console.log(`j = ${j}%${end} + (floor(${j/end}) == 1 ? (${i} + 1) : 1)`);
 	console.log(`j = ${j}%${end} + (${floor(j/end)} == 1 ? (${i} + 1) : 1)`);
@@ -287,6 +374,6 @@ for (let k = 0; k < loops; k++) {
 	j = j%end + (floor(j/end) == 1 ? i : 0) + 1;
 
 	console.log(`STATUS: i: ${i}, j: ${j}`);
-	console.log("----------------------------------");
+	console.log("---------------------------------");
 
 }
