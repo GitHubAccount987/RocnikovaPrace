@@ -76,7 +76,7 @@ class Triangle {
 
 		points.sort((a, b) => { return a.x - b.x; });
 
-		this.points = points;
+		this._points = points;
 		this.triangleColor = triangleColor;
 
 		// CIRCUMCENTER
@@ -88,6 +88,11 @@ class Triangle {
 		// on it
 
 		// edgeA = Vertex A → Vertex B, edgeB = Vertex B → Vertex C
+
+		/*console.log("--- CIRCUMCENTER DEBUG ---");
+		console.log(`A: (${this.points[0].x}, ${this.points[0].y})`);
+		console.log(`B: (${this.points[1].x}, ${this.points[1].y})`);
+		console.log(`C: (${this.points[2].x}, ${this.points[2].y})`);*/
 
 		let edgeA = p5.Vector.sub(this.points[1], this.points[0]), edgeB = p5.Vector.sub(this.points[2], this.points[1]);
 
@@ -103,6 +108,14 @@ class Triangle {
 
 		let scalar = (edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x))/(edgeB.x*edgeA.y - edgeB.y*edgeA.x);
 
+		/*console.log("--- SCALAR DEBUG ---");
+		console.log(`(${edgeB.x}*(${middleB.y} - ${middleA.y}) - ${edgeB.y}*(${middleB.x} - ${middleA.x}))/(${edgeB.x}*${edgeA.y} - ${edgeB.y}*${edgeA.x})`);
+		console.log(`(${edgeB.x}*${middleB.y - middleA.y} - ${edgeB.y}*${middleB.x - middleA.x})/(${edgeB.x*edgeA.y} - ${edgeB.y*edgeA.x})`);
+		console.log(`(${edgeB.x*(middleB.y - middleA.y)} - ${edgeB.y*(middleB.x - middleA.x)})/${edgeB.x*edgeA.y - edgeB.y*edgeA.x}`);
+		console.log(`${edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x)}/${edgeB.x*edgeA.y - edgeB.y*edgeA.x}`);
+		console.log(`scalar = ${scalar}`);
+		console.log("--------------------");*/
+
 		// and finally the point of interesection aka the circumcenter
 		// the equation below is describing the line made by edgeA (the perpendicular version)
 
@@ -116,24 +129,16 @@ class Triangle {
 
 	contains(elements) {
 
-		let currentElement;
-
-		for (let i = 0; i < elements.length; i++) {
-
-			currentElement = elements[i];
-
-			// ik what you are thinking but screw it idc
-
-			if (currentElement === this.points[0] || currentElement === this.points[1] || currentElement === this.points[2]) { return true; }
-
-		}
+		for (let i = 0; i < elements.length; i++) if (this.points.includes(elements[0])) return true;
 
 		return false;
 	}
 
+	get points() { return this._points; }
+
 	get edges() {
 
-		// The edges are recorded in the following order
+		// The edges are returned in the following order
 		// VertexA → VertexB, VertexB → VertexC, VertexA → VertexC
 
 		return [
@@ -167,15 +172,19 @@ function setup() {
 	// The canvas is in a variable since I would like the mouseClicked event to be only fired when the user clicks on the canvas
 	// If I would only use the mouseClicked function alone then the event would be fired every time the user clicks
 
+	points.push({color: color(0, 0, 0), position: createVector(50, 100)});
+	points.push({color: color(0, 0, 0), position: createVector(100, 50)});
+	points.push({color: color(0, 0, 0), position: createVector(150, 100)});
+
 	mainCanvas = createCanvas(400, 400);
 
-	mainCanvas.doubleClicked(() => {
+	/*mainCanvas.doubleClicked(() => {
 
 		// Double click == delete selected point
 
 		console.log("DELETE REQUEST");
 
-	});
+	});*/
 
 	mainCanvas.mouseClicked(() => {
 
@@ -301,6 +310,27 @@ function draw() {
 		circle(canvasPoint.x, canvasPoint.y, 5);
 
 	}
+
+	// Rendering triangles
+
+	let A, B, C;
+	let trianglePoints;
+
+	for (let i = 0; i < triangles.length; i++) {
+
+		trianglePoints = triangles[i].points;
+
+		A = trianglePoints[0];
+		B = trianglePoints[1];
+		C = trianglePoints[2];
+
+		noFill();
+
+		stroke(triangles[i].triangleColor);
+
+		triangle(A.x, A.y, B.x, B.y, C.x, C.y);
+
+	}
 }
 
 // Button functions \\
@@ -390,6 +420,30 @@ function triangulationHandler() {
 		edgesToDelete = 0;
 
 		currentPoint = points[i].position;
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
+		console.log(`--- DEBUG ${i} ---`);
+		console.log(`currentPoint: (${currentPoint.x}, ${currentPoint.y})`);
+
+		console.log("incompleteTriangles: {");
+
+		let DEBUG_var;
+
+		for (let j = 0; j < incompleteTriangles.length; j++) {
+
+			DEBUG_var = incompleteTriangles[j].points;
+
+			console.log(`\t1: (${DEBUG_var[0].x}, ${DEBUG_var[0].y})`);
+			console.log(`\t2: (${DEBUG_var[1].x}, ${DEBUG_var[1].y})`);
+			console.log(`\t3: (${DEBUG_var[2].x}, ${DEBUG_var[2].y})`);
+			console.log("-----");
+
+		}
+
+		console.log("}");
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
 
 		for (let j = 0; j < incompleteTriangles.length; j++) {
 
@@ -506,6 +560,20 @@ function triangulationHandler() {
 			}
 		}
 
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
+		console.log("edges: {");
+
+		for (let j = 0; j < edges.length; j++) {
+
+			console.log(`\t(${edges[j][0].x}, ${edges[j][0].y}); (${edges[j][1].x}, ${edges[j][1].y})`);
+
+		}
+
+		console.log("}");
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
 		// Now that we have looped through every incomplete triangle
 		// and every single duplicate edge has been deleted
 		// we will now create a new set of triangles out of
@@ -520,15 +588,15 @@ function triangulationHandler() {
 
 		for (let j = 0; j < edges.length; j++) {
 
-			currentEdge = edges[i];
+			currentEdge = edges[j];
 
-			incompleteTriangles.push(new Triangle(
+			incompleteTriangles.push(new Triangle([
 
 				currentEdge[0],
 				currentEdge[1],
-				points[i]
+				currentPoint
 
-			));
+			]));
 
 		}
 	}
@@ -555,7 +623,7 @@ function triangulationHandler() {
 	//			    that would tell us by how
 	//			    much the array is shifted
 	//
-	// Or we can do start from the end.
+	// Or what we can do is to start from the end.
 	// Let's take into consideration our previous example.
 	//
 	//   0   1  2  3   4   5
@@ -580,7 +648,10 @@ function triangulationHandler() {
 
 	let toCompare = [A, B, C];
 
-	for (let i = completeTriangles.length - 1; i => 0; i--) {
+	for (let i = completeTriangles.length - 1; i >= 0; i--) {
+
+		console.log(`i	   : ${i}`);
+		console.log(`length: ${completeTriangles.length}`);
 
 		if (!completeTriangles[i].contains(toCompare)) continue;
 
@@ -588,7 +659,17 @@ function triangulationHandler() {
 
 	}
 
+	// DEBUG COLORING
+
+	for (let i = 0; i < completeTriangles.length; i++) {
+
+		completeTriangles[i].triangleColor = color(random(0, 255), random(0, 255), random(0, 255));
+
+	}
+
 	triangles = completeTriangles;
+
+	console.log(triangles);
 
 }
 
