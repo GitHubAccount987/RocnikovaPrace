@@ -72,6 +72,8 @@ class Triangle {
 
 	constructor(points, triangleColor = color(0, 0, 0)) {
 
+		console.log("--- TRIANGLE DEBUG ---");
+
 		// Sort the points in an ascending order according to their x coordinate
 
 		points.sort((a, b) => { return a.x - b.x; });
@@ -124,6 +126,15 @@ class Triangle {
 		// The radius is squared due to optimatization reasons
 
 		this.circumradiusSq = p5.Vector.sub(this.points[0], this.circumcenter).magSq();
+
+		console.log("Points: {");
+		console.log(`\tA: (${this.points[0].x}, ${this.points[0].y})`);
+		console.log(`\tB: (${this.points[1].x}, ${this.points[1].y})`);
+		console.log(`\tC: (${this.points[2].x}, ${this.points[2].y})`);
+		console.log("}");
+
+		console.log(`circumcenter: (${this.circumcenter.x}, ${this.circumcenter.y})`);
+		console.log(`circumradiusSq: ${this.circumradiusSq}`);
 
 	}
 
@@ -456,6 +467,16 @@ function triangulationHandler() {
 			// Thus this triangle's circumcircle cannot intersect any other
 			// point and won't be sub divided
 
+			/*console.log("--- EXPECTED ---");
+			console.log(`(${currentTriangle.circumcenter.x}, ${currentTriangle.circumcenter.y}) - (${currentPoint.x}, ${currentPoint.y}) = (${currentTriangle.circumcenter.x - currentPoint.x}, ${currentTriangle.circumcenter.y - currentPoint.y})`);
+			console.log(`(${currentTriangle.circumcenter.x - currentPoint.x})^2 + (${currentTriangle.circumcenter.y - currentPoint.y})^2 = ${p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq()}`);
+			console.log("--- REALITY ---");
+			console.log(`${p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq()}`);
+
+			console.log(`||A||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[0]).mag()}`);
+			console.log(`||B||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[1]).mag()}`);
+			console.log(`||C||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[2]).mag()}`);*/
+
 			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() > currentTriangle.circumradiusSq) { completeTriangles.push(currentTriangle); continue; }
 
 			edgesToDelete++;
@@ -538,6 +559,20 @@ function triangulationHandler() {
 			// Whenever I delete something in the array the elements will be shifted
 			// by 1 to the left this k will help with correcting this issue.
 
+			// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
+			console.log("edgesBefore: {");
+
+			for (let j = 0; j < edges.length; j++) {
+
+				console.log(`\t(${edges[j][0].x}, ${edges[j][0].y}); (${edges[j][1].x}, ${edges[j][1].y})`);
+
+			}
+
+			console.log("}");
+
+			// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
 			for (let k = 0; k < flagged.length; k++) {
 
 				// The removal of the second edge has to come before
@@ -554,8 +589,13 @@ function triangulationHandler() {
 				// [(a), b, c, e, f] - see? e and f index changed however
 				//		       a, b and c index remains the same
 
-				edges.splice(flagged[k][1] - k, 0);
-				edges.splice(flagged[k][0] - k, 0);
+				// the k is in the equation because when we delete the
+				// second duplicate from the edges array the whole array
+				// will be shifted. So after the first iteration the array
+				// will be shifted by one then two then three etc.
+
+				edges.splice(flagged[k][1] - k, 1);
+				edges.splice(flagged[k][0] - k, 1);
 
 			}
 		}
@@ -599,6 +639,47 @@ function triangulationHandler() {
 			]));
 
 		}
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+
+		console.log("incompleteTrianglesOut: {");
+
+		let DEBUG_var2;
+
+		for (let j = 0; j < incompleteTriangles.length; j++) {
+
+			DEBUG_var2 = incompleteTriangles[j].points;
+
+			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
+			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
+			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
+			console.log("-----");
+
+		}
+
+		console.log("}");
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
+
+		console.log("complete: {");
+
+		let DEBUG_var3;
+
+		for (let j = 0; j < completeTriangles.length; j++) {
+
+			DEBUG_var3 = completeTriangles[j].points;
+
+			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
+			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
+			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
+			console.log("-----");
+
+		}
+
+		console.log("}");
+
+		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
+
 	}
 
 	// Now that we have looped through all of the points
