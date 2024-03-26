@@ -72,7 +72,7 @@ class Triangle {
 
 	constructor(points, triangleColor = color(0, 0, 0)) {
 
-		console.log("--- TRIANGLE DEBUG ---");
+		//console.log("--- TRIANGLE DEBUG ---");
 
 		// Sort the points in an ascending order according to their x coordinate
 
@@ -127,14 +127,14 @@ class Triangle {
 
 		this.circumradiusSq = p5.Vector.sub(this.points[0], this.circumcenter).magSq();
 
-		console.log("Points: {");
+		/*console.log("Points: {");
 		console.log(`\tA: (${this.points[0].x}, ${this.points[0].y})`);
 		console.log(`\tB: (${this.points[1].x}, ${this.points[1].y})`);
 		console.log(`\tC: (${this.points[2].x}, ${this.points[2].y})`);
 		console.log("}");
 
 		console.log(`circumcenter: (${this.circumcenter.x}, ${this.circumcenter.y})`);
-		console.log(`circumradiusSq: ${this.circumradiusSq}`);
+		console.log(`circumradiusSq: ${this.circumradiusSq}`);*/
 
 	}
 
@@ -440,14 +440,18 @@ function triangulationHandler() {
 		console.log("incompleteTriangles: {");
 
 		let DEBUG_var;
+		let DEBUG_varTr;
 
 		for (let j = 0; j < incompleteTriangles.length; j++) {
 
+			DEBUG_varTr = incompleteTriangles[j];
 			DEBUG_var = incompleteTriangles[j].points;
 
 			console.log(`\t1: (${DEBUG_var[0].x}, ${DEBUG_var[0].y})`);
 			console.log(`\t2: (${DEBUG_var[1].x}, ${DEBUG_var[1].y})`);
 			console.log(`\t3: (${DEBUG_var[2].x}, ${DEBUG_var[2].y})`);
+			console.log(`\tcircumcenter: (${DEBUG_varTr.circumcenter.x}, ${DEBUG_varTr.circumcenter.y})`);
+			console.log(`\tcircumradiusSq: ${DEBUG_varTr.circumradiusSq}`);
 			console.log("-----");
 
 		}
@@ -645,14 +649,18 @@ function triangulationHandler() {
 		console.log("incompleteTrianglesOut: {");
 
 		let DEBUG_var2;
+		let DEBUG_varTr2;
 
 		for (let j = 0; j < incompleteTriangles.length; j++) {
 
+			DEBUG_varTr2 = incompleteTriangles[j];
 			DEBUG_var2 = incompleteTriangles[j].points;
 
 			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
 			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
 			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
+			console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
+			console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
 			console.log("-----");
 
 		}
@@ -663,15 +671,16 @@ function triangulationHandler() {
 
 		console.log("complete: {");
 
-		let DEBUG_var3;
-
 		for (let j = 0; j < completeTriangles.length; j++) {
 
-			DEBUG_var3 = completeTriangles[j].points;
+			DEBUG_var2 = completeTriangles[j].points;
+			DEBUG_varTr2 = completeTriangles[j];
 
 			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
 			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
 			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
+			console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
+			console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
 			console.log("-----");
 
 		}
