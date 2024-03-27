@@ -138,9 +138,17 @@ class Triangle {
 
 	}
 
+	// PROBLEM IS HERE
+
 	contains(elements) {
 
-		for (let i = 0; i < elements.length; i++) if (this.points.includes(elements[0])) return true;
+		for (let i = 0; i < elements.length; i++) {
+
+			console.log(...this.points);
+
+			if (this._points.includes(elements[i])) return true;
+
+		}
 
 		return false;
 	}
@@ -691,6 +699,8 @@ function triangulationHandler() {
 
 	}
 
+	completeTriangles.push(...incompleteTriangles);
+
 	// Now that we have looped through all of the points
 	// we now have to delete every triangle that shares
 	// one of it's vertices with the super triangle
@@ -748,6 +758,28 @@ function triangulationHandler() {
 		completeTriangles.splice(i, 0);
 
 	}
+
+	// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
+
+	console.log("completeFinal: {");
+
+	for (let j = 0; j < completeTriangles.length; j++) {
+
+		DEBUG_var2 = completeTriangles[j].points;
+		DEBUG_varTr2 = completeTriangles[j];
+
+		console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
+		console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
+		console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
+		console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
+		console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
+		console.log("-----");
+
+	}
+
+	console.log("}");
+
+	// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
 
 	// DEBUG COLORING
 
