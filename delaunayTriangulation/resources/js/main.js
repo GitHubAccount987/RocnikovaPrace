@@ -142,11 +142,29 @@ class Triangle {
 
 	contains(elements) {
 
+		/*let DEBUG_var;
+
+		console.log("=== CONTAINS DEBUG ===");
+
+		console.log("points: {");
+
+		for (let i = 0; i < this.points.length; i++) {
+
+			DEBUG_var = this.points[i];
+
+			console.log(`\t(${DEBUG_var.x}, ${DEBUG_var.y})`);
+
+		}
+
+		console.log("}");*/
+
 		for (let i = 0; i < elements.length; i++) {
 
-			console.log(...this.points);
+			//console.log(`(${elements[i].x}, ${elements[i].y}) ∈ points == ${this._points.includes(elements[i])}`);
 
 			if (this._points.includes(elements[i])) return true;
+
+			//console.log("ahskdasddj");
 
 		}
 
@@ -191,9 +209,13 @@ function setup() {
 	// The canvas is in a variable since I would like the mouseClicked event to be only fired when the user clicks on the canvas
 	// If I would only use the mouseClicked function alone then the event would be fired every time the user clicks
 
+	points.push({color: color(0, 0, 0), position: createVector(42, 286)});
 	points.push({color: color(0, 0, 0), position: createVector(50, 100)});
 	points.push({color: color(0, 0, 0), position: createVector(100, 50)});
+	points.push({color: color(0, 0, 0), position: createVector(141, 279)});
 	points.push({color: color(0, 0, 0), position: createVector(150, 100)});
+	points.push({color: color(0, 0, 0), position: createVector(241, 118)});
+	points.push({color: color(0, 0, 0), position: createVector(246, 202)});
 
 	mainCanvas = createCanvas(400, 400);
 
@@ -750,12 +772,13 @@ function triangulationHandler() {
 
 	for (let i = completeTriangles.length - 1; i >= 0; i--) {
 
-		console.log(`i	   : ${i}`);
-		console.log(`length: ${completeTriangles.length}`);
+		//console.log(`i	   : ${i}`);
+		//console.log(`length: ${completeTriangles.length}`);
+		//console.log(`contains(toCompare) == ${completeTriangles[i].contains(toCompare)}`);
 
 		if (!completeTriangles[i].contains(toCompare)) continue;
 
-		completeTriangles.splice(i, 0);
+		completeTriangles.splice(i, 1); // <-- the second argument must be a 1 god dame it not 0 wasted like a month
 
 	}
 
