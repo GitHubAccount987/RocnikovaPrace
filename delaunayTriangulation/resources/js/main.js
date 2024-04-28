@@ -8,71 +8,11 @@ let points = [];
 
 let triangles= [];
 
-/*
-
-s - size of the array
-
-y = s/f(x) - gives j
-
-i = j
-
-7 - 1 = 0, 7 = 1, 12 = 2, 16 = 3, 19 = 4
-6 - 
-5 - 
-4 - 
-3 - 
-2 - 
-
-[a, b, c, d, e, f, g] 21
-[a, b, c, d, e, f]    15
-[a, b, c, d, e]       10
-[a, b, c, d]          6
-[a, b, c]             3
-[a, b]                1
-
-(7, 21)
-(6, 15)
-(5, 10)
-(4, 6)
-(3, 3)
-(2, 1)
-
-f(x) = 1/2*x^2 - 1/2*x - tells us how many times will the array be accesed
-
-visual representation of how the comparasion process works
-the elements in brackets are the elements which are
-being compared. i is the leftmost bracket j is the
-rightmost bracket.
-
-
-f(5) = 1/2*5^2 - 1/2*5 = 10 - the array will be accesed 10 times
-
-[(a), (b), c, d, e] 1  - i = 0, j = 1
-[(a), b, (c), d, e] 2  - i = 0, j = 2
-[(a), b, c, (d), e] 3  - i = 0, j = 3
-[(a), b, c, d, (e)] 4  - i = 0, j = 4
-[a, (b), (c), d, e] 5  - i = 1, j = 2
-[a, (b), c, (d), e] 6  - i = 1, j = 3
-[a, (b), c, d, (e)] 7  - i = 1, j = 4
-[a, b, (c), (d), e] 8  - i = 2, j = 3
-[a, b, (c), d, (e)] 9  - i = 2, j = 4
-[a, b, c, (d), (e)] 10 - i = 3, j = 4
-
-f(3) = 1/2*3^2 - 1/2*3 = 3 - the array will be accesed 3 times
-
-[(a), (b), c] - i = 0, j = 1
-[(a), b, (c)] - i = 0, j = 2
-[a, (b), (c)] - i = 1, j = 2
-
-*/
-
 // Classes \\
 
 class Triangle {
 
 	constructor(points, triangleColor = color(0, 0, 0)) {
-
-		//console.log("--- TRIANGLE DEBUG ---");
 
 		// Sort the points in an ascending order according to their x coordinate
 
@@ -91,11 +31,6 @@ class Triangle {
 
 		// edgeA = Vertex A → Vertex B, edgeB = Vertex B → Vertex C
 
-		/*console.log("--- CIRCUMCENTER DEBUG ---");
-		console.log(`A: (${this.points[0].x}, ${this.points[0].y})`);
-		console.log(`B: (${this.points[1].x}, ${this.points[1].y})`);
-		console.log(`C: (${this.points[2].x}, ${this.points[2].y})`);*/
-
 		let edgeA = p5.Vector.sub(this.points[1], this.points[0]), edgeB = p5.Vector.sub(this.points[2], this.points[1]);
 
 		// Finding the center of each edge
@@ -110,14 +45,6 @@ class Triangle {
 
 		let scalar = (edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x))/(edgeB.x*edgeA.y - edgeB.y*edgeA.x);
 
-		/*console.log("--- SCALAR DEBUG ---");
-		console.log(`(${edgeB.x}*(${middleB.y} - ${middleA.y}) - ${edgeB.y}*(${middleB.x} - ${middleA.x}))/(${edgeB.x}*${edgeA.y} - ${edgeB.y}*${edgeA.x})`);
-		console.log(`(${edgeB.x}*${middleB.y - middleA.y} - ${edgeB.y}*${middleB.x - middleA.x})/(${edgeB.x*edgeA.y} - ${edgeB.y*edgeA.x})`);
-		console.log(`(${edgeB.x*(middleB.y - middleA.y)} - ${edgeB.y*(middleB.x - middleA.x)})/${edgeB.x*edgeA.y - edgeB.y*edgeA.x}`);
-		console.log(`${edgeB.x*(middleB.y - middleA.y) - edgeB.y*(middleB.x - middleA.x)}/${edgeB.x*edgeA.y - edgeB.y*edgeA.x}`);
-		console.log(`scalar = ${scalar}`);
-		console.log("--------------------");*/
-
 		// and finally the point of interesection aka the circumcenter
 		// the equation below is describing the line made by edgeA (the perpendicular version)
 
@@ -127,36 +54,9 @@ class Triangle {
 
 		this.circumradiusSq = p5.Vector.sub(this.points[0], this.circumcenter).magSq();
 
-		/*console.log("Points: {");
-		console.log(`\tA: (${this.points[0].x}, ${this.points[0].y})`);
-		console.log(`\tB: (${this.points[1].x}, ${this.points[1].y})`);
-		console.log(`\tC: (${this.points[2].x}, ${this.points[2].y})`);
-		console.log("}");
-
-		console.log(`circumcenter: (${this.circumcenter.x}, ${this.circumcenter.y})`);
-		console.log(`circumradiusSq: ${this.circumradiusSq}`);*/
-
 	}
 
-	// PROBLEM IS HERE
-
 	contains(elements) {
-
-		/*let DEBUG_var;
-
-		console.log("=== CONTAINS DEBUG ===");
-
-		console.log("points: {");
-
-		for (let i = 0; i < this.points.length; i++) {
-
-			DEBUG_var = this.points[i];
-
-			console.log(`\t(${DEBUG_var.x}, ${DEBUG_var.y})`);
-
-		}
-
-		console.log("}");*/
 
 		for (let i = 0; i < elements.length; i++) {
 
@@ -190,42 +90,9 @@ class Triangle {
 
 // Code \\
 
-/*
-
-TODO:
-
-• Triangulate function
-• Create edge class?
-• Make it possible for the triangulation to be shown step by step
-• Make it possible for the points to be deleted
-• Add a more optimatizated version of the Nearest Neighboar Search
-
-• Save function (make a download dialogue window pop up)
-
-*/
-
 function setup() {
 
-	// The canvas is in a variable since I would like the mouseClicked event to be only fired when the user clicks on the canvas
-	// If I would only use the mouseClicked function alone then the event would be fired every time the user clicks
-
-	points.push({color: color(0, 0, 0), position: createVector(42, 286)});
-	points.push({color: color(0, 0, 0), position: createVector(50, 100)});
-	points.push({color: color(0, 0, 0), position: createVector(100, 50)});
-	points.push({color: color(0, 0, 0), position: createVector(141, 279)});
-	points.push({color: color(0, 0, 0), position: createVector(150, 100)});
-	points.push({color: color(0, 0, 0), position: createVector(241, 118)});
-	points.push({color: color(0, 0, 0), position: createVector(246, 202)});
-
 	mainCanvas = createCanvas(400, 400);
-
-	/*mainCanvas.doubleClicked(() => {
-
-		// Double click == delete selected point
-
-		console.log("DELETE REQUEST");
-
-	});*/
 
 	mainCanvas.mouseClicked(() => {
 
@@ -266,13 +133,6 @@ function setup() {
 				currentPoint = points[i];
 
 				currentDistance = mousePosition.dist(currentPoint.position);
-
-				/*console.log("=== DEBUG ===");
-				console.log(`currentPoint   : { color: ${currentPoint.color}, position: ${currentPoint.position} }`);
-				console.log(`currentDistance: ${currentDistance}`);
-				console.log(`currentDistance >= minDistance => ${currentDistance >= minDistance}`);
-				console.log(`currentDistance >= currentSmallestDistance => ${currentDistance >= currentSmallestDistance}`);
-				console.log(`currentDistance >= minDistance || currentDistance >= currentSmallestDistance => ${currentDistance >= minDistance || currentDistance >= currentSmallestDistance}`);*/
 
 				// This checks if the point is closer than minDistance and if the distance
 				// is smaller than the current smallest distance. The current smallest distance
@@ -462,33 +322,7 @@ function triangulationHandler() {
 
 		currentPoint = points[i].position;
 
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
-		console.log(`--- DEBUG ${i} ---`);
-		console.log(`currentPoint: (${currentPoint.x}, ${currentPoint.y})`);
-
-		console.log("incompleteTriangles: {");
-
-		let DEBUG_var;
-		let DEBUG_varTr;
-
-		for (let j = 0; j < incompleteTriangles.length; j++) {
-
-			DEBUG_varTr = incompleteTriangles[j];
-			DEBUG_var = incompleteTriangles[j].points;
-
-			console.log(`\t1: (${DEBUG_var[0].x}, ${DEBUG_var[0].y})`);
-			console.log(`\t2: (${DEBUG_var[1].x}, ${DEBUG_var[1].y})`);
-			console.log(`\t3: (${DEBUG_var[2].x}, ${DEBUG_var[2].y})`);
-			console.log(`\tcircumcenter: (${DEBUG_varTr.circumcenter.x}, ${DEBUG_varTr.circumcenter.y})`);
-			console.log(`\tcircumradiusSq: ${DEBUG_varTr.circumradiusSq}`);
-			console.log("-----");
-
-		}
-
-		console.log("}");
-
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
+		completeTriangles.length = 0;
 
 		for (let j = 0; j < incompleteTriangles.length; j++) {
 
@@ -501,17 +335,7 @@ function triangulationHandler() {
 			// Thus this triangle's circumcircle cannot intersect any other
 			// point and won't be sub divided
 
-			/*console.log("--- EXPECTED ---");
-			console.log(`(${currentTriangle.circumcenter.x}, ${currentTriangle.circumcenter.y}) - (${currentPoint.x}, ${currentPoint.y}) = (${currentTriangle.circumcenter.x - currentPoint.x}, ${currentTriangle.circumcenter.y - currentPoint.y})`);
-			console.log(`(${currentTriangle.circumcenter.x - currentPoint.x})^2 + (${currentTriangle.circumcenter.y - currentPoint.y})^2 = ${p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq()}`);
-			console.log("--- REALITY ---");
-			console.log(`${p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq()}`);
-
-			console.log(`||A||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[0]).mag()}`);
-			console.log(`||B||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[1]).mag()}`);
-			console.log(`||C||: ${p5.Vector.sub(currentTriangle.circumcenter, currentTriangle.points[2]).mag()}`);*/
-
-			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() > currentTriangle.circumradiusSq) { completeTriangles.push(currentTriangle); continue; }
+			if (p5.Vector.sub(currentTriangle.circumcenter, currentPoint).magSq() >= currentTriangle.circumradiusSq) { completeTriangles.push(currentTriangle); continue; }
 
 			edgesToDelete++;
 
@@ -549,7 +373,7 @@ function triangulationHandler() {
 
 			let flagged = [];
 
-			let i = 0, j = 0; // this might conflict with the enclosing loop's i
+			let i = 0, j = 0;
 
 			for (let k = 0; k < loops; k++) {
 
@@ -563,8 +387,6 @@ function triangulationHandler() {
 				i += floor(j/lastIndex);
 
 				j = j%lastIndex + floor(j/lastIndex)*i + 1;
-
-				// bro this is terrible do an edge class
 
 				if (edges[i][0] != edges[j][0] || edges[i][1] != edges[j][1]) continue;
 
@@ -593,20 +415,6 @@ function triangulationHandler() {
 			// Whenever I delete something in the array the elements will be shifted
 			// by 1 to the left this k will help with correcting this issue.
 
-			// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
-			console.log("edgesBefore: {");
-
-			for (let j = 0; j < edges.length; j++) {
-
-				console.log(`\t(${edges[j][0].x}, ${edges[j][0].y}); (${edges[j][1].x}, ${edges[j][1].y})`);
-
-			}
-
-			console.log("}");
-
-			// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
 			for (let k = 0; k < flagged.length; k++) {
 
 				// The removal of the second edge has to come before
@@ -634,20 +442,6 @@ function triangulationHandler() {
 			}
 		}
 
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
-		console.log("edges: {");
-
-		for (let j = 0; j < edges.length; j++) {
-
-			console.log(`\t(${edges[j][0].x}, ${edges[j][0].y}); (${edges[j][1].x}, ${edges[j][1].y})`);
-
-		}
-
-		console.log("}");
-
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
 		// Now that we have looped through every incomplete triangle
 		// and every single duplicate edge has been deleted
 		// we will now create a new set of triangles out of
@@ -674,50 +468,7 @@ function triangulationHandler() {
 
 		}
 
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG 
-
-		console.log("incompleteTrianglesOut: {");
-
-		let DEBUG_var2;
-		let DEBUG_varTr2;
-
-		for (let j = 0; j < incompleteTriangles.length; j++) {
-
-			DEBUG_varTr2 = incompleteTriangles[j];
-			DEBUG_var2 = incompleteTriangles[j].points;
-
-			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
-			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
-			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
-			console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
-			console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
-			console.log("-----");
-
-		}
-
-		console.log("}");
-
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-
-		console.log("complete: {");
-
-		for (let j = 0; j < completeTriangles.length; j++) {
-
-			DEBUG_var2 = completeTriangles[j].points;
-			DEBUG_varTr2 = completeTriangles[j];
-
-			console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
-			console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
-			console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
-			console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
-			console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
-			console.log("-----");
-
-		}
-
-		console.log("}");
-
-		// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
+		incompleteTriangles.push(...completeTriangles);
 
 	}
 
@@ -772,43 +523,9 @@ function triangulationHandler() {
 
 	for (let i = completeTriangles.length - 1; i >= 0; i--) {
 
-		//console.log(`i	   : ${i}`);
-		//console.log(`length: ${completeTriangles.length}`);
-		//console.log(`contains(toCompare) == ${completeTriangles[i].contains(toCompare)}`);
-
 		if (!completeTriangles[i].contains(toCompare)) continue;
 
-		completeTriangles.splice(i, 1); // <-- the second argument must be a 1 god dame it not 0 wasted like a month
-
-	}
-
-	// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-
-	console.log("completeFinal: {");
-
-	for (let j = 0; j < completeTriangles.length; j++) {
-
-		DEBUG_var2 = completeTriangles[j].points;
-		DEBUG_varTr2 = completeTriangles[j];
-
-		console.log(`\t1: (${DEBUG_var2[0].x}, ${DEBUG_var2[0].y})`);
-		console.log(`\t2: (${DEBUG_var2[1].x}, ${DEBUG_var2[1].y})`);
-		console.log(`\t3: (${DEBUG_var2[2].x}, ${DEBUG_var2[2].y})`);
-		console.log(`\tcircumcenter: (${DEBUG_varTr2.circumcenter.x}, ${DEBUG_varTr2.circumcenter.y})`);
-		console.log(`\tcircumradiusSq: ${DEBUG_varTr2.circumradiusSq}`);
-		console.log("-----");
-
-	}
-
-	console.log("}");
-
-	// DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG DEBUG
-
-	// DEBUG COLORING
-
-	for (let i = 0; i < completeTriangles.length; i++) {
-
-		completeTriangles[i].triangleColor = color(random(0, 255), random(0, 255), random(0, 255));
+		completeTriangles.splice(i, 1);
 
 	}
 
@@ -841,16 +558,3 @@ function deleteHandler() {
 	closestPoint = null;
 
 }
-
-// DEBUG \\
-
-/*function keyPressed() {
-
-	// 68 == "D"
-
-	if (keyCode == 68) {
-
-		
-
-	}
-}*/
